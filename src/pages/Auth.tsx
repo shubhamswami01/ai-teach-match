@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, UserCircle } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -97,7 +98,10 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center p-4">
+    <div className="min-h-screen gradient-hero flex items-center justify-center p-4 relative">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <Card className="w-full max-w-md shadow-elegant">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary flex items-center justify-center">

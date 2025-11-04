@@ -6,6 +6,7 @@ import TeacherDashboard from "@/components/TeacherDashboard";
 import StudentDashboard from "@/components/StudentDashboard";
 import { Button } from "@/components/ui/button";
 import { LogOut, Loader2 } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -68,10 +69,13 @@ const Dashboard = () => {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-primary">SkillMatch</h1>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </header>
 
