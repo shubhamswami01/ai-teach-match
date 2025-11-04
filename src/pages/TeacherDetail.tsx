@@ -27,17 +27,20 @@ const TeacherDetail = () => {
     try {
       const { data: teacherData, error: teacherError } = await supabase
         .from("teachers")
-        .select(`
-          *,
-          profiles (
-            full_name,
-            email
-          )
-        `)
+        .select("*")
         .eq("id", id)
         .single();
 
       if (teacherError) throw teacherError;
+
+      // Fetch profile separately using user_id
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", teacherData.user_id)
+        .single();
+
+      if (profileError) throw profileError;
 
       const { data: skillsData, error: skillsError } = await supabase
         .from("skills")
@@ -46,7 +49,7 @@ const TeacherDetail = () => {
 
       if (skillsError) throw skillsError;
 
-      setTeacher(teacherData);
+      setTeacher({ ...teacherData, profiles: profileData });
       setSkills(skillsData || []);
     } catch (error: any) {
       console.error("Error loading teacher:", error);
