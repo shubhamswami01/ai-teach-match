@@ -35,11 +35,7 @@ serve(async (req) => {
           years_of_experience,
           rank,
           bio,
-          expertise_areas,
-          profiles (
-            full_name,
-            email
-          )
+          expertise_areas
         )
       `)
       .ilike('skill_name', `%${skill}%`);
@@ -50,19 +46,44 @@ serve(async (req) => {
     }
 
     // Transform and rank teachers
+    // First, collect unique user_ids to fetch profiles separately
+    const teacherRecords = skillsData
+      .filter((item: any) => item.teachers)
+      .map((item: any) => (Array.isArray(item.teachers) ? item.teachers[0] : item.teachers))
+      .filter(Boolean);
+
+    const userIds = Array.from(new Set(teacherRecords.map((t: any) => t.user_id).filter(Boolean)));
+
+    let profilesMap: Record<string, { id: string; full_name: string; email: string | null }> = {};
+    if (userIds.length > 0) {
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, full_name, email')
+        .in('id', userIds as string[]);
+
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+      } else {
+        profilesMap = (profilesData || []).reduce((acc: Record<string, any>, p: any) => {
+          acc[p.id] = p;
+          return acc;
+        }, {} as Record<string, any>);
+      }
+    }
+
     const teachers = skillsData
-      .filter(item => item.teachers)
-      .map(item => {
+      .filter((item: any) => item.teachers)
+      .map((item: any) => {
         const teacher = Array.isArray(item.teachers) ? item.teachers[0] : item.teachers;
-        const profile = Array.isArray(teacher.profiles) ? teacher.profiles[0] : teacher.profiles;
+        const profile = teacher && teacher.user_id ? profilesMap[teacher.user_id] : undefined;
         return {
           ...teacher,
           skill_name: item.skill_name,
           proficiency_level: item.proficiency_level,
-          profile
+          profile,
         };
       })
-      .sort((a, b) => a.rank - b.rank);
+      .sort((a: any, b: any) => a.rank - b.rank);
 
     console.log('Found teachers:', teachers.length);
 
@@ -73,7 +94,7 @@ serve(async (req) => {
       teachers.slice(0, 5).map(async (teacher) => {
         try {
           const prompt = `Generate a brief, engaging 2-sentence description for a teacher with these details:
-Name: ${teacher.profile.full_name}
+Name: ${teacher.profile?.full_name || 'Experienced teacher'}
 Occupation: ${teacher.occupation}
 Experience: ${teacher.years_of_experience} years
 Skill: ${teacher.skill_name} (${teacher.proficiency_level})
