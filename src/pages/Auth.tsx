@@ -42,7 +42,7 @@ const Auth = () => {
             full_name: fullName,
             user_type: userType,
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/`,
         },
       });
 
@@ -82,10 +82,10 @@ const Auth = () => {
 
       toast({
         title: "Welcome back!",
-        description: "Redirecting to your dashboard...",
+        description: "Redirecting to home page...",
       });
 
-      navigate("/dashboard");
+      navigate("/");
     } catch (error: any) {
       toast({
         variant: "destructive",
