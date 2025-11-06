@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RankBadge from "@/components/RankBadge";
-import { ArrowLeft, Loader2, Mail, Briefcase, Calendar, GraduationCap } from "lucide-react";
+import { ArrowLeft, Loader2, Mail, Briefcase, Calendar, GraduationCap, MessageSquare } from "lucide-react";
 
 const TeacherDetail = () => {
   const { id } = useParams();
@@ -171,17 +171,30 @@ const TeacherDetail = () => {
                 <p className="text-white/90">
                   Connect with {teacher.profiles.full_name} to start your learning journey
                 </p>
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="shadow-glow"
-                  onClick={() => {
-                    window.location.href = `mailto:${teacher.profiles.email}?subject=Learning Opportunity`;
-                  }}
-                >
-                  <Mail className="h-5 w-5 mr-2" />
-                  Contact Teacher
-                </Button>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="shadow-glow"
+                    onClick={() => {
+                      navigate(`/messages?teacherId=${teacher.user_id}`);
+                    }}
+                  >
+                    <MessageSquare className="h-5 w-5 mr-2" />
+                    Send Message
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                    onClick={() => {
+                      window.location.href = `mailto:${teacher.profiles.email}?subject=Learning Opportunity`;
+                    }}
+                  >
+                    <Mail className="h-5 w-5 mr-2" />
+                    Email Teacher
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
