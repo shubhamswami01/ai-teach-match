@@ -275,10 +275,10 @@ const Messages = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 md:h-[calc(100vh-200px)] min-h-[70vh]">
           {/* Conversations List */}
           <Card className="md:col-span-1">
-            <ScrollArea className="h-full">
+            <ScrollArea className="md:h-full max-h-[40vh]">
               <div className="p-4 space-y-2">
                 <h2 className="font-semibold mb-4">Conversations</h2>
                 {conversations.length === 0 ? (

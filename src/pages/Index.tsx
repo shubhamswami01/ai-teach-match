@@ -8,8 +8,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="gradient-hero text-white py-20 px-4 relative">
+      <section className="gradient-hero text-white py-12 sm:py-16 md:py-20 px-4 relative">
         <div className="absolute top-4 right-4 z-10">
           <ThemeToggle />
         </div>
@@ -19,17 +18,17 @@ const Index = () => {
               <Sparkles className="h-4 w-4" />
               <span className="text-sm">AI-Powered Skill Matching</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
               Connect with Expert Teachers
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
               Find the perfect teacher ranked by experience and expertise. Powered by AI to match your learning goals.
             </p>
-            <div className="flex gap-4 justify-center pt-4">
-              <Button size="lg" variant="secondary" onClick={() => navigate("/auth")} className="shadow-glow text-base">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4">
+              <Button size="lg" variant="secondary" onClick={() => navigate("/auth")} className="shadow-glow text-base w-full sm:w-auto">
                 Get Started
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate("/auth")} className="bg-white/10 border-white/20 hover:bg-white/20 text-white text-base">
+              <Button size="lg" variant="outline" onClick={() => navigate("/auth")} className="bg-white/10 border-white/20 hover:bg-white/20 text-white text-base w-full sm:w-auto">
                 Sign In
               </Button>
             </div>
@@ -37,11 +36,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4">
+      <section className="py-12 sm:py-16 md:py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-center mb-12">How SkillMatch Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="text-center space-y-4">
               <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Users className="h-8 w-8 text-primary" />
@@ -74,13 +72,13 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 gradient-card">
+      <section className="py-12 sm:py-16 md:py-20 px-4 gradient-card">
         <div className="container mx-auto max-w-4xl text-center space-y-6">
           <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground">
             Join thousands of teachers and students already learning on SkillMatch
           </p>
-          <Button size="lg" onClick={() => navigate("/auth")} className="shadow-elegant text-base">
+          <Button size="lg" onClick={() => navigate("/auth")} className="shadow-elegant text-base w-full sm:w-auto">
             Create Free Account
           </Button>
         </div>
