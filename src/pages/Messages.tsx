@@ -11,30 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-interface Conversation {
-  id: string;
-  student_id: string;
-  teacher_id: string;
-  updated_at: string;
-  other_user: {
-    full_name: string;
-    email: string;
-  };
-  unread_count: number;
-}
-
-interface Message {
-  id: string;
-  conversation_id: string;
-  sender_id: string;
-  content: string;
-  is_read: boolean;
-  created_at: string;
-  sender: {
-    full_name: string;
-  };
-}
-
 const Messages = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,10 +18,10 @@ const Messages = () => {
   const teacherId = searchParams.get('teacherId');
   
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [userId, setUserId] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -76,7 +52,7 @@ const Messages = () => {
             filter: `conversation_id=eq.${selectedConversation}`
           },
           (payload) => {
-            const newMsg = payload.new as Message;
+            const newMsg = payload.new;
             setMessages(prev => [...prev, newMsg]);
             if (newMsg.sender_id !== userId) {
               markMessagesAsRead(selectedConversation);
@@ -105,7 +81,7 @@ const Messages = () => {
         return;
       }
       setUserId(session.user.id);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error checking user:", error);
       toast({
         variant: "destructive",
@@ -147,7 +123,7 @@ const Messages = () => {
         await loadConversations();
         setSelectedConversation(newConv.id);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error starting conversation:", error);
       toast({
         variant: "destructive",
@@ -201,7 +177,7 @@ const Messages = () => {
       );
 
       setConversations(conversationsWithDetails);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error loading conversations:", error);
     }
   };
@@ -224,7 +200,7 @@ const Messages = () => {
 
       if (error) throw error;
       setMessages(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error loading messages:", error);
     }
   };
@@ -241,7 +217,7 @@ const Messages = () => {
         .neq("sender_id", userId);
       
       loadConversations();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error marking messages as read:", error);
     }
   };
@@ -263,7 +239,7 @@ const Messages = () => {
 
       setNewMessage("");
       loadConversations();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending message:", error);
       toast({
         variant: "destructive",

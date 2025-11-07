@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import TeacherDashboard from "@/components/TeacherDashboard";
 import StudentDashboard from "@/components/StudentDashboard";
 import { Button } from "@/components/ui/button";
-import { LogOut, Loader2, Home, MessageSquare } from "lucide-react";
+import { LogOut, Loader2, Home } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Dashboard = () => {
@@ -71,10 +71,6 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold text-primary">SkillMatch</h1>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Button variant="outline" onClick={() => navigate("/messages")}>
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Messages
-            </Button>
             <Button variant="outline" onClick={() => navigate("/")}>
               <Home className="h-4 w-4 mr-2" />
               Home
