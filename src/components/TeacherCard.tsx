@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import RankBadge from "./RankBadge";
-import { GraduationCap, Briefcase, Calendar, MessageSquare } from "lucide-react";
+import { GraduationCap, Briefcase, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface TeacherCardProps {
@@ -78,27 +78,16 @@ const TeacherCard = ({ teacher }: TeacherCardProps) => {
         )}
       </CardContent>
 
-      <CardFooter className="flex gap-2">
+      <CardFooter>
         <Button 
           variant="outline" 
-          className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-smooth"
+          className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-smooth"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/teacher/${teacher.id}`);
           }}
         >
           View Profile
-        </Button>
-        <Button 
-          variant="default" 
-          className="flex-1"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/messages?teacherId=${teacher.id}`);
-          }}
-        >
-          <MessageSquare className="h-4 w-4 mr-2" />
-          Message
         </Button>
       </CardFooter>
     </Card>
