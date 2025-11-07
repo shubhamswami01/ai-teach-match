@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RankBadge from "@/components/RankBadge";
-import { ArrowLeft, Loader2, Mail, Briefcase, Calendar, GraduationCap } from "lucide-react";
+import { ArrowLeft, Loader2, Mail, Briefcase, Calendar, GraduationCap, MessageSquare } from "lucide-react";
 
 const TeacherDetail = () => {
   const { id } = useParams();
@@ -85,14 +85,14 @@ const TeacherDetail = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <main className="container mx-auto px-4 py-4 sm:py-8">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           <Card className="gradient-card shadow-elegant">
             <CardHeader>
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="flex-1">
-                  <CardTitle className="text-3xl mb-2">{teacher.profiles.full_name}</CardTitle>
-                  <div className="flex flex-col gap-2 text-muted-foreground">
+                  <CardTitle className="text-2xl sm:text-3xl mb-2">{teacher.profiles.full_name}</CardTitle>
+                  <div className="flex flex-col gap-2 text-sm sm:text-base text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Briefcase className="h-4 w-4" />
                       <span>{teacher.occupation}</span>
@@ -111,18 +111,18 @@ const TeacherDetail = () => {
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 sm:space-y-6">
               {teacher.bio && (
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">About</h3>
-                  <p className="text-muted-foreground">{teacher.bio}</p>
+                  <h3 className="font-semibold text-base sm:text-lg mb-2">About</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">{teacher.bio}</p>
                 </div>
               )}
 
               {teacher.expertise_areas && teacher.expertise_areas.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-lg mb-3">Expertise Areas</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 className="font-semibold text-base sm:text-lg mb-3">Expertise Areas</h3>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {teacher.expertise_areas.map((area: string, idx: number) => (
                       <Badge key={idx} variant="secondary" className="text-sm px-3 py-1">
                         {area}
@@ -136,18 +136,18 @@ const TeacherDetail = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                 <GraduationCap className="h-5 w-5" />
                 Skills & Expertise
               </CardTitle>
             </CardHeader>
             <CardContent>
               {skills.length === 0 ? (
-                <p className="text-muted-foreground text-center py-4">
+                <p className="text-sm sm:text-base text-muted-foreground text-center py-4">
                   No skills listed yet
                 </p>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
                   {skills.map((skill) => (
                     <div
                       key={skill.id}
@@ -167,21 +167,34 @@ const TeacherDetail = () => {
           <Card className="gradient-hero text-white">
             <CardContent className="pt-6">
               <div className="text-center space-y-4">
-                <h3 className="text-2xl font-bold">Ready to Learn?</h3>
-                <p className="text-white/90">
+                <h3 className="text-xl sm:text-2xl font-bold">Ready to Learn?</h3>
+                <p className="text-sm sm:text-base text-white/90 px-4">
                   Connect with {teacher.profiles.full_name} to start your learning journey
                 </p>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-white/10 hover:bg-white/20 text-white border-white/20"
-                  onClick={() => {
-                    window.location.href = `mailto:${teacher.profiles.email}?subject=Learning Opportunity`;
-                  }}
-                >
-                  <Mail className="h-5 w-5 mr-2" />
-                  Email Teacher
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center px-4">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="shadow-glow w-full sm:w-auto"
+                    onClick={() => {
+                      navigate(`/messages?teacherId=${teacher.user_id}`);
+                    }}
+                  >
+                    <MessageSquare className="h-5 w-5 mr-2" />
+                    Send Message
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-white/10 hover:bg-white/20 text-white border-white/20 w-full sm:w-auto"
+                    onClick={() => {
+                      window.location.href = `mailto:${teacher.profiles.email}?subject=Learning Opportunity`;
+                    }}
+                  >
+                    <Mail className="h-5 w-5 mr-2" />
+                    Email Teacher
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

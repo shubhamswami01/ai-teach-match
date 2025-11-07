@@ -27,43 +27,43 @@ const TeacherCard = ({ teacher }: TeacherCardProps) => {
   return (
     <Card className="gradient-card hover:shadow-elegant transition-smooth cursor-pointer group" onClick={() => navigate(`/teacher/${teacher.id}`)}>
       <CardHeader>
-        <div className="flex items-start justify-between mb-2">
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-2 mb-2">
           <div className="flex-1">
-            <CardTitle className="text-xl group-hover:text-primary transition-smooth">
+            <CardTitle className="text-lg sm:text-xl group-hover:text-primary transition-smooth">
               {teacher.profile.full_name}
             </CardTitle>
-            <CardDescription className="flex items-center gap-1 mt-1">
+            <CardDescription className="flex items-center gap-1 mt-1 text-xs sm:text-sm">
               <Briefcase className="h-3 w-3" />
               {teacher.occupation}
             </CardDescription>
           </div>
           <RankBadge rank={teacher.rank} />
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
           <span>{teacher.years_of_experience} years experience</span>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2 sm:space-y-3">
         {teacher.skill_name && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <GraduationCap className="h-4 w-4 text-primary" />
-            <span className="font-semibold">{teacher.skill_name}</span>
+            <span className="font-semibold text-sm sm:text-base">{teacher.skill_name}</span>
             {teacher.proficiency_level && (
-              <Badge variant="secondary" className="capitalize">
+              <Badge variant="secondary" className="capitalize text-xs">
                 {teacher.proficiency_level}
               </Badge>
             )}
           </div>
         )}
         
-        <p className="text-sm text-muted-foreground line-clamp-3">
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3">
           {teacher.aiDescription || "Experienced educator with a passion for teaching and helping students achieve their goals."}
         </p>
 
         {teacher.expertise_areas && teacher.expertise_areas.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
+          <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-2 sm:mt-3">
             {teacher.expertise_areas.slice(0, 3).map((area, idx) => (
               <Badge key={idx} variant="outline" className="text-xs">
                 {area}
