@@ -7,6 +7,30 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Input validation
+const validateSkillInput = (skill: unknown): string => {
+  if (typeof skill !== 'string') {
+    throw new Error('Skill must be a string');
+  }
+  
+  const trimmed = skill.trim();
+  
+  if (trimmed.length < 2) {
+    throw new Error('Search term must be at least 2 characters');
+  }
+  
+  if (trimmed.length > 100) {
+    throw new Error('Search term too long (max 100 characters)');
+  }
+  
+  // Allow only alphanumeric, spaces, and hyphens
+  if (!/^[a-zA-Z0-9\s-]+$/.test(trimmed)) {
+    throw new Error('Search term contains invalid characters');
+  }
+  
+  return trimmed;
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -14,7 +38,23 @@ serve(async (req) => {
 
   try {
     const { skill } = await req.json();
-    console.log('Matching teachers for skill:', skill);
+    
+    // Validate input
+    let validatedSkill: string;
+    try {
+      validatedSkill = validateSkillInput(skill);
+    } catch (validationError: unknown) {
+      const errorMessage = validationError instanceof Error ? validationError.message : 'Invalid input';
+      return new Response(
+        JSON.stringify({ error: errorMessage }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    console.log('Matching teachers for skill:', validatedSkill);
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -38,7 +78,7 @@ serve(async (req) => {
           expertise_areas
         )
       `)
-      .ilike('skill_name', `%${skill}%`);
+      .ilike('skill_name', `%${validatedSkill}%`);
 
     if (skillsError) {
       console.error('Error fetching skills:', skillsError);
@@ -100,7 +140,7 @@ Experience: ${teacher.years_of_experience} years
 Skill: ${teacher.skill_name} (${teacher.proficiency_level})
 Expertise: ${teacher.expertise_areas?.join(', ') || 'Various areas'}
 
-Make it professional and highlight why they're a great match for learning ${skill}.`;
+Make it professional and highlight why they're a great match for learning ${validatedSkill}.`;
 
           const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
             method: 'POST',

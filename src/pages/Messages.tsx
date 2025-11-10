@@ -10,6 +10,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { z } from "zod";
+
+const messageSchema = z.object({
+  content: z.string()
+    .trim()
+    .min(1, 'Message cannot be empty')
+    .max(2000, 'Message too long (max 2000 characters)')
+});
 
 const Messages = () => {
   const navigate = useNavigate();
@@ -225,6 +233,17 @@ const Messages = () => {
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation || !userId) return;
 
+    // Validate message
+    const validation = messageSchema.safeParse({ content: newMessage });
+    if (!validation.success) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Message",
+        description: validation.error.issues[0].message,
+      });
+      return;
+    }
+
     setSending(true);
     try {
       const { error } = await supabase
@@ -232,7 +251,7 @@ const Messages = () => {
         .insert({
           conversation_id: selectedConversation,
           sender_id: userId,
-          content: newMessage.trim()
+          content: validation.data.content
         });
 
       if (error) throw error;

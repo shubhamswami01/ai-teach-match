@@ -10,6 +10,19 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { GraduationCap, UserCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { z } from "zod";
+
+const signUpSchema = z.object({
+  email: z.string().email('Invalid email format').max(255, 'Email too long'),
+  password: z.string().min(6, 'Password must be at least 6 characters').max(72, 'Password too long'),
+  fullName: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name too long'),
+  userType: z.enum(['teacher', 'student'])
+});
+
+const signInSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(1, 'Password is required')
+});
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -34,13 +47,26 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Validate input
+      const validation = signUpSchema.safeParse({ email, password, fullName, userType });
+      if (!validation.success) {
+        const firstError = validation.error.issues[0];
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: firstError.message,
+        });
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validation.data.email,
+        password: validation.data.password,
         options: {
           data: {
-            full_name: fullName,
-            user_type: userType,
+            full_name: validation.data.fullName,
+            user_type: validation.data.userType,
           },
           emailRedirectTo: `${window.location.origin}/`,
         },
@@ -50,7 +76,7 @@ const Auth = () => {
 
       toast({
         title: "Account created!",
-        description: "You can now sign in with your credentials.",
+        description: "You can now log in with your credentials.",
       });
 
       // Auto sign in after signup
@@ -73,9 +99,22 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Validate input
+      const validation = signInSchema.safeParse({ email, password });
+      if (!validation.success) {
+        const firstError = validation.error.issues[0];
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: firstError.message,
+        });
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: validation.data.email,
+        password: validation.data.password,
       });
 
       if (error) throw error;
@@ -113,7 +152,7 @@ const Auth = () => {
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="signin">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
@@ -145,7 +184,7 @@ const Auth = () => {
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign In"}
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
               </CardFooter>
             </form>
